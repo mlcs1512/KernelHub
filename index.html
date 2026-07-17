@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KernelHub — Explore, compare, and install the operating system that fits your needs. Windows, Linux, macOS, and Hackintosh guides.">
+  <title>KernelHub — Explore. Compare. Install.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+</head>
+<body>
+
+  <!-- Reading progress bar -->
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
+  <!-- Ambient background -->
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- ============ NAVIGATION ============ -->
+  <header class="nav-wrap">
+    <nav class="nav glass" aria-label="Main navigation">
+      <a href="#home" class="brand" data-route="home">
+        <span class="brand-mark">K</span>
+        <span class="brand-name">KernelHub</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" data-route="home" class="active">Home</a></li>
+        <li><a href="#windows" data-route="windows">Windows</a></li>
+        <li><a href="#linux" data-route="linux">Linux</a></li>
+        <li><a href="#hackintosh" data-route="hackintosh">Hackintosh</a></li>
+        <li><a href="#compare" data-route="compare">Compare</a></li>
+        <li><a href="#quiz" data-route="quiz">OS Quiz</a></li>
+        <li><a href="#about" data-route="about">About</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="icon-btn" id="searchBtn" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button class="icon-btn" id="favoritesBtn" aria-label="Favorites" title="Favorites">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.6-9.5-8.5C.6 9.5 2 5.5 5.5 5 7.6 4.7 9.5 6 12 8.5 14.5 6 16.4 4.7 18.5 5 22 5.5 23.4 9.5 21.5 12.5 19 16.4 12 21 12 21z"/></svg>
+          <span class="fav-count" id="favCount" hidden>0</span>
+        </button>
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4 1.4-1.4"/></svg>
+        </button>
+        <button class="icon-btn nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ============ SEARCH OVERLAY ============ -->
+  <div class="search-overlay" id="searchOverlay" hidden>
+    <div class="search-panel glass" role="dialog" aria-modal="true" aria-label="Search">
+      <div class="search-input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" id="searchInput" placeholder="Search operating systems, guides, topics…" autocomplete="off" aria-label="Search">
+        <kbd>ESC</kbd>
+      </div>
+      <ul class="search-results" id="searchResults" role="listbox"></ul>
+    </div>
+  </div>
+
+  <!-- ============ FAVORITES DRAWER ============ -->
+  <aside class="fav-drawer glass" id="favDrawer" hidden aria-label="Favorites">
+    <div class="fav-head">
+      <h3>Bookmarks</h3>
+      <button class="icon-btn" id="favClose" aria-label="Close favorites">✕</button>
+    </div>
+    <ul id="favList" class="fav-list"></ul>
+    <p class="fav-empty" id="favEmpty">No bookmarks yet. Click the ♡ on any card or guide to save it here.</p>
+  </aside>
+
+  <main id="app">
+
+  <!-- ============ HOME ============ -->
+  <section class="page active" id="page-home" data-page="home">
+    <div class="hero">
+      <p class="hero-eyebrow">Explore. Compare. Install.</p>
+      <h1 class="hero-title">Find your perfect<br><span class="grad-text">operating system.</span></h1>
+      <p class="hero-sub">KernelHub helps you discover, compare, and install the OS that fits your needs — from Windows to Arch Linux to Hackintosh.</p>
+      <div class="hero-cta">
+        <a href="#linux" class="btn btn-primary" data-route="linux">Explore Operating Systems</a>
+        <a href="#quiz" class="btn btn-glass" data-route="quiz">Take OS Quiz</a>
+      </div>
+    </div>
+
+    <div class="os-cards reveal">
+      <a href="#windows" class="os-card glass" data-route="windows" data-fav-id="home-windows" data-fav-title="Windows Guides">
+        <button class="fav-toggle" aria-label="Bookmark Windows">♡</button>
+        <div class="os-logo os-logo-win">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 10.5 4.4v7.1H3V5.5zM3 18.5l7.5 1.1v-7H3v5.9zM11.5 4.2 21 3v8.5h-9.5V4.2zM11.5 19.8 21 21v-8.5h-9.5v7.3z"/></svg>
+        </div>
+        <h3>Windows</h3>
+        <p>From Windows 7 to 11 — installation, drivers, optimization, and debloating.</p>
+        <span class="card-link">5 versions covered →</span>
+      </a>
+      <a href="#linux" class="os-card glass" data-route="linux" data-fav-id="home-linux" data-fav-title="Linux Database">
+        <button class="fav-toggle" aria-label="Bookmark Linux">♡</button>
+        <div class="os-logo os-logo-linux">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-2.4 0-3.6 1.7-3.6 3.9 0 1.4.2 2.5-.5 3.9-.9 1.7-2.4 3.2-2.9 5.3-.3 1.3 0 2.5.6 3.3-.2.4-.2.9.1 1.4.4.6 1.3.8 2.2.6.7-.1 1.4.1 2.1.3.7.3 1.4.4 2 .3.5.4 1.3.6 2.1.4.5-.1 1.1-.4 1.5-.9 1-.1 2-.5 2.5-1.2.3-.5.3-1 .1-1.5.7-.9.9-2.2.5-3.6-.5-1.9-2-3.5-2.8-5.1-.7-1.4-.4-2.5-.5-3.9C15.3 3.5 14.3 2 12 2zm-1.2 5.2c.4 0 .7.4.7.9s-.3.9-.7.9c-.4 0-.7-.4-.7-.9s.3-.9.7-.9zm2.5 0c.4 0 .7.4.7.9s-.3.9-.7.9-.7-.4-.7-.9.3-.9.7-.9z"/></svg>
+        </div>
+        <h3>Linux</h3>
+        <p>10 distros from beginner Mint to advanced NixOS, plus terminal & customization.</p>
+        <span class="card-link">10 distros covered →</span>
+      </a>
+      <a href="#hackintosh" class="os-card glass" data-route="hackintosh" data-fav-id="home-hack" data-fav-title="Hackintosh Guide">
+        <button class="fav-toggle" aria-label="Bookmark Hackintosh">♡</button>
+        <div class="os-logo os-logo-hack">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.1 12.6c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3.1 2.4 1.2-.1 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.6-1-2.7-3.9zM14.7 5.3c.7-.8 1.1-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg>
+        </div>
+        <h3>Hackintosh</h3>
+        <p>Run macOS on PC hardware with OpenCore — full setup and troubleshooting.</p>
+        <span class="card-link">Complete guide →</span>
+      </a>
+      <a href="#compare" class="os-card glass" data-route="compare" data-fav-id="home-macos" data-fav-title="macOS / Compare">
+        <button class="fav-toggle" aria-label="Bookmark macOS">♡</button>
+        <div class="os-logo os-logo-mac">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+        </div>
+        <h3>macOS</h3>
+        <p>Apple's polished ecosystem — see how it compares to everything else.</p>
+        <span class="card-link">Compare now →</span>
+      </a>
+    </div>
+
+    <div class="featured glass reveal">
+      <h2>Choose smarter. <span class="grad-text">Install confidently.</span></h2>
+      <p>Every guide on KernelHub is structured like professional documentation: requirements, step-by-step installation, drivers, optimization, and honest pros & cons. No fluff — just what you need to make the right call.</p>
+      <div class="featured-stats">
+        <div><strong>16+</strong><span>OS guides</span></div>
+        <div><strong>7</strong><span>comparison categories</span></div>
+        <div><strong>1</strong><span>smart quiz</span></div>
+        <div><strong>0</strong><span>frameworks used</span></div>
+      </div>
+    </div>
+
+    <div class="tips-grid reveal">
+      <div class="tip-card glass tip-beginner">
+        <h4>💡 Beginner Tip</h4>
+        <p>Not sure where to start? Take the <a href="#quiz" data-route="quiz">OS Quiz</a> — it matches your habits and hardware to the right system in under a minute.</p>
+      </div>
+      <div class="tip-card glass tip-pro">
+        <h4>⚡ Pro Tip</h4>
+        <p>Always verify installer checksums (SHA-256) before flashing a USB. A corrupted image is the #1 cause of mysterious install failures.</p>
+      </div>
+      <div class="tip-card glass tip-mistake">
+        <h4>⚠️ Common Mistake</h4>
+        <p>Installing an OS without backing up first. Partitioning errors are irreversible — back up before touching the disk. Every time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WINDOWS ============ -->
+  <section class="page" id="page-windows" data-page="windows">
+    <header class="page-head">
+      <h1>Windows <span class="grad-text">Guides</span></h1>
+      <p>Installation, drivers, optimization, and honest assessments for every modern Windows version.</p>
+    </header>
+
+    <div class="sub-nav glass" role="tablist" aria-label="Windows versions">
+      <button class="sub-tab active" data-tab="win7">Windows 7</button>
+      <button class="sub-tab" data-tab="win8">Windows 8</button>
+      <button class="sub-tab" data-tab="win81">Windows 8.1</button>
+      <button class="sub-tab" data-tab="win10">Windows 10</button>
+      <button class="sub-tab" data-tab="win11">Windows 11</button>
+    </div>
+
+    <!-- Windows 7 -->
+    <article class="tab-panel active glass guide" id="tab-win7" data-fav-id="win7" data-fav-title="Windows 7 Guide">
+      <div class="guide-head">
+        <h2>Windows 7</h2>
+        <div class="guide-meta"><span class="badge badge-legacy">Legacy — EOL 2020</span><button class="fav-toggle" aria-label="Bookmark Windows 7">♡</button></div>
+      </div>
+      <h3>Overview</h3>
+      <p>Released in 2009, Windows 7 is remembered as one of Microsoft's best releases: fast, stable, and clean. Support ended in January 2020 (ESU ended 2023), so it receives <strong>no security updates</strong>. It survives today in retro builds, offline machines, and legacy industrial systems.</p>
+      <h3>Requirements</h3>
+      <ul class="spec-list">
+        <li><strong>CPU:</strong> 1 GHz (32-bit or 64-bit)</li>
+        <li><strong>RAM:</strong> 1 GB (32-bit) / 2 GB (64-bit)</li>
+        <li><strong>Storage:</strong> 16–20 GB</li>
+        <li><strong>GPU:</strong> DirectX 9 with WDDM 1.0 driver</li>
+      </ul>
+      <h3>Installation</h3>
+      <ol>
+        <li>Obtain a Windows 7 ISO and a valid license key.</li>
+        <li>Create a bootable USB with <a href="https://rufus.ie" target="_blank" rel="noopener">Rufus</a> (use MBR + BIOS for older machines).</li>
+        <li>Boot from USB (usually F12/F2/DEL for boot menu), select "Custom install".</li>
+        <li>Delete/format the target partition and install.</li>
+        <li>Modern USB 3.0 ports may not work during setup — use USB 2.0 ports or inject xHCI drivers into the ISO.</li>
+      </ol>
+      <h3>Drivers</h3>
+      <p>Driver support for hardware newer than ~2016 (Intel Kaby Lake / AMD Ryzen) is officially absent. Use manufacturer archives, or tools like Snappy Driver Installer Origin for older hardware. NVMe drives require a hotfix (KB2990941) slipstreamed into the installer.</p>
+      <h3>Best uses today</h3>
+      <ul><li>Retro gaming rigs (2005–2015 titles)</li><li>Air-gapped/offline legacy software machines</li><li>Learning Windows internals in a VM</li></ul>
+      <div class="pros-cons">
+        <div class="pros"><h4>Advantages</h4><ul><li>Extremely lightweight by modern standards</li><li>Clean, focused Aero UI with no ads or telemetry bloat</li><li>Excellent compatibility with older software and games</li></ul></div>
+        <div class="cons"><h4>Disadvantages</h4><ul><li>No security updates — unsafe on the internet</li><li>No modern browser support (Chrome/Firefox dropped it)</li><li>No support for new CPUs, NVMe (without patches), or DirectX 12</li></ul></div>
+      </div>
+      <div class="callout callout-warn">⚠️ Do not use Windows 7 as a daily driver connected to the internet. It is a security risk.</div>
+    </article>
+
+    <!-- Windows 8 -->
+    <article class="tab-panel glass guide" id="tab-win8" data-fav-id="win8" data-fav-title="Windows 8 Guide">
+      <div class="guide-head">
+        <h2>Windows 8</h2>
+        <div class="guide-meta"><span class="badge badge-legacy">Legacy — EOL 2016</span><button class="fav-toggle" aria-label="Bookmark Windows 8">♡</button></div>
+      </div>
+      <h3>Interface changes</h3>
+      <p>Windows 8 (2012) replaced the Start menu with a full-screen <strong>Start screen</strong> of live tiles, optimized for touch. The removal of the Start button and the hidden "Charms bar" made it one of the most controversial Windows releases ever. Under the hood, however, it introduced faster boot (hybrid shutdown), a better Task Manager, native USB 3.0 support, and Storage Spaces.</p>
+      <h3>Installation</h3>
+      <ol>
+        <li>Create a bootable USB with Rufus (GPT + UEFI recommended; Windows 8 was the first version designed around UEFI/Secure Boot).</li>
+        <li>Boot the USB, choose Custom install, format the target partition.</li>
+        <li>A Microsoft account is optional — local accounts work fine.</li>
+        <li>Strongly recommended: upgrade immediately to 8.1 (free), as base Windows 8 support ended in January 2016.</li>
+      </ol>
+      <h3>Compatibility</h3>
+      <p>Almost everything that runs on Windows 7 runs on 8. Driver support is broadly the same as 8.1. The main pain points are the UI (fixable with Classic Shell / Open-Shell) and store apps that no longer function since the Windows 8 store was retired.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Advantages</h4><ul><li>Faster boot and lower resource usage than 7</li><li>Native USB 3.0 and better multi-monitor support</li></ul></div>
+        <div class="cons"><h4>Disadvantages</h4><ul><li>Jarring dual UI (desktop + Metro)</li><li>Unsupported since 2016 — skip it and use 8.1 or newer</li></ul></div>
+      </div>
+    </article>
+
+    <!-- Windows 8.1 -->
+    <article class="tab-panel glass guide" id="tab-win81" data-fav-id="win81" data-fav-title="Windows 8.1 Guide">
+      <div class="guide-head">
+        <h2>Windows 8.1</h2>
+        <div class="guide-meta"><span class="badge badge-legacy">Legacy — EOL 2023</span><button class="fav-toggle" aria-label="Bookmark Windows 8.1">♡</button></div>
+      </div>
+      <h3>Improvements over 8</h3>
+      <ul>
+        <li>Start <em>button</em> returned (though it opens the Start screen).</li>
+        <li>Boot-to-desktop option — skip the tile screen entirely.</li>
+        <li>Better snap multitasking, deeper SkyDrive/OneDrive integration.</li>
+        <li>Improved search, updated bundled apps, smaller disk footprint.</li>
+      </ul>
+      <h3>Installation</h3>
+      <ol>
+        <li>Use a Windows 8.1 ISO directly (a Windows 8 key usually activates 8.1).</li>
+        <li>Rufus → GPT/UEFI for modern-ish hardware, MBR/BIOS for older.</li>
+        <li>Install, then run Windows Update repeatedly until fully patched (final updates: January 2023).</li>
+        <li>Install Open-Shell for a traditional Start menu if desired.</li>
+      </ol>
+      <h3>Modern usage</h3>
+      <p>Support ended January 2023. Like Windows 7, it should only be used offline or in VMs. If your hardware runs 8.1 well, it will almost always run Windows 10 — or a lightweight Linux like <a href="#linux" data-route="linux">Linux Mint XFCE</a> — which are far safer choices.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Advantages</h4><ul><li>The refined, "fixed" version of Windows 8</li><li>Lightweight and fast on 2010s hardware</li></ul></div>
+        <div class="cons"><h4>Disadvantages</h4><ul><li>End of life — no updates since 2023</li><li>Modern apps and browsers are dropping support</li></ul></div>
+      </div>
+    </article>
+
+    <!-- Windows 10 -->
+    <article class="tab-panel glass guide" id="tab-win10" data-fav-id="win10" data-fav-title="Windows 10 Guide">
+      <div class="guide-head">
+        <h2>Windows 10</h2>
+        <div class="guide-meta"><span class="badge badge-stable">EOL Oct 2025 (LTSC longer)</span><button class="fav-toggle" aria-label="Bookmark Windows 10">♡</button></div>
+      </div>
+      <h3>Requirements</h3>
+      <ul class="spec-list">
+        <li><strong>CPU:</strong> 1 GHz, 2+ cores recommended</li>
+        <li><strong>RAM:</strong> 2 GB minimum, 8 GB comfortable</li>
+        <li><strong>Storage:</strong> 32 GB minimum, SSD strongly recommended</li>
+        <li><strong>No TPM or Secure Boot requirement</strong> — runs on almost anything from ~2008 onward</li>
+      </ul>
+      <h3>USB installation</h3>
+      <ol>
+        <li>Download the official <a href="https://www.microsoft.com/software-download/windows10" target="_blank" rel="noopener">Media Creation Tool</a> from Microsoft.</li>
+        <li>Run it → "Create installation media" → USB flash drive (8 GB+). It handles formatting and boot setup automatically.</li>
+        <li>Boot from the USB, choose "Custom: Install Windows only".</li>
+        <li>Delete old partitions on the target drive (backup first!) and select the unallocated space.</li>
+        <li>Skip the product key during setup if you'll activate later; choose a local account via "Offline account" if preferred.</li>
+      </ol>
+      <h3>Drivers</h3>
+      <p>Windows Update installs most drivers automatically. For best results: get GPU drivers directly from NVIDIA/AMD/Intel, and chipset drivers from your motherboard vendor. Avoid third-party "driver updater" utilities — they are mostly scamware.</p>
+      <h3>Optimization</h3>
+      <ul>
+        <li>Disable startup bloat: Task Manager → Startup tab.</li>
+        <li>Enable Storage Sense to auto-clean temp files.</li>
+        <li>Set power plan to "High performance" on desktops.</li>
+        <li>Uninstall preloaded OEM/Store apps you don't use.</li>
+      </ul>
+      <h3>Privacy settings</h3>
+      <ul>
+        <li>Settings → Privacy: disable advertising ID, "tailored experiences", and app access you don't need.</li>
+        <li>Set diagnostic data to "Required only".</li>
+        <li>Consider <code>O&O ShutUp10++</code> for one-click hardening (review each toggle — some break features).</li>
+      </ul>
+      <h3>What is LTSC?</h3>
+      <p><strong>Long-Term Servicing Channel</strong> is an enterprise edition without the Store, Edge (older builds), Cortana, or feature updates — only security patches for 10 years. <em>IoT Enterprise LTSC 2021</em> is supported until <strong>2032</strong>. It's the leanest, most stable Windows 10, but it's licensed for business/embedded use, not sold retail.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Advantages</h4><ul><li>Runs well on old, TPM-less hardware</li><li>Mature, stable, universally compatible</li><li>LTSC variant supported into the 2030s</li></ul></div>
+        <div class="cons"><h4>Disadvantages</h4><ul><li>Mainstream support ended October 2025 (ESU available)</li><li>Telemetry requires manual taming</li><li>No new features going forward</li></ul></div>
+      </div>
+    </article>
+
+    <!-- Windows 11 -->
+    <article class="tab-panel glass guide" id="tab-win11" data-fav-id="win11" data-fav-title="Windows 11 Guide">
+      <div class="guide-head">
+        <h2>Windows 11</h2>
+        <div class="guide-meta"><span class="badge badge-current">Current</span><button class="fav-toggle" aria-label="Bookmark Windows 11">♡</button></div>
+      </div>
+      <h3>Requirements</h3>
+      <ul class="spec-list">
+        <li><strong>CPU:</strong> 64-bit, 2+ cores, on Microsoft's supported list (Intel 8th gen+ / Ryzen 2000+)</li>
+        <li><strong>RAM:</strong> 4 GB minimum, 16 GB comfortable</li>
+        <li><strong>Storage:</strong> 64 GB+, SSD effectively required</li>
+        <li><strong>TPM 2.0 and UEFI Secure Boot capable</strong></li>
+      </ul>
+      <h3>TPM &amp; Secure Boot explained</h3>
+      <p><strong>TPM 2.0</strong> (Trusted Platform Module) is a security chip (or CPU firmware feature — Intel PTT / AMD fTPM) that stores encryption keys and enables features like BitLocker and Windows Hello. <strong>Secure Boot</strong> verifies the bootloader's signature to block boot-level malware. Both are usually present but <em>disabled</em> in BIOS on 2016+ machines: look for "fTPM"/"PTT" and "Secure Boot" in your UEFI settings and enable them.</p>
+      <h3>Installation</h3>
+      <ol>
+        <li>Download the ISO or Media Creation Tool from <a href="https://www.microsoft.com/software-download/windows11" target="_blank" rel="noopener">microsoft.com</a>.</li>
+        <li>Create the USB, boot it, choose Custom install.</li>
+        <li>Windows 11 pushes a Microsoft account; on Pro you can choose a local account, on Home you can disconnect the network during OOBE (or press Shift+F10 and run <code>oobe\bypassnro</code> on older builds).</li>
+        <li>Let Windows Update pull drivers, then install GPU drivers from the vendor.</li>
+      </ol>
+      <h3>Unsupported hardware — the honest discussion</h3>
+      <p>Windows 11 can be installed on unsupported CPUs/without TPM via registry bypasses or tools like Rufus (which offers a checkbox to remove the checks). It generally works fine — <em>but</em>: Microsoft states such installs may not receive updates (in practice they mostly do, for now), some future features may require the hardware, and you accept the risk of a future update breaking things. For hardware older than ~2015, Windows 10 LTSC or Linux is usually the smarter choice.</p>
+      <h3>Optimization</h3>
+      <ul>
+        <li>Settings → Personalization → Start: disable recommendations.</li>
+        <li>Disable startup apps and background apps you don't use.</li>
+        <li>Turn off widgets and Teams autostart.</li>
+        <li>Game Mode + updated GPU drivers for gaming rigs; consider disabling VBS/HVCI on pure gaming machines (small FPS gain, lower security).</li>
+      </ul>
+      <h3>Debloating</h3>
+      <p>Windows 11 ships with promoted apps and ads in Start/lock screen. Safe debloating approach:</p>
+      <ul>
+        <li>Uninstall unwanted Store apps normally (right-click → uninstall).</li>
+        <li>Settings → Privacy &amp; security: disable advertising ID and "suggestions".</li>
+        <li>Power users: community scripts like <code>Win11Debloat</code> or Chris Titus's <code>winutil</code> — always review scripts before running, and create a restore point first.</li>
+      </ul>
+      <div class="pros-cons">
+        <div class="pros"><h4>Advantages</h4><ul><li>Best gaming support (DirectStorage, Auto HDR)</li><li>Actively developed with long support runway</li><li>Modern UI, WSL2, great hardware support</li></ul></div>
+        <div class="cons"><h4>Disadvantages</h4><ul><li>Strict hardware requirements exclude older PCs</li><li>Ads/telemetry require cleanup</li><li>Microsoft account pressure during setup</li></ul></div>
+      </div>
+    </article>
+
+    <div class="faq glass">
+      <h3>Windows FAQ</h3>
+      <details><summary>Can I upgrade Windows 7/8.1 to 10 for free?</summary><p>The official free upgrade offer ended, but in practice valid 7/8.1 keys have historically activated Windows 10/11. A clean install with your existing key is worth trying.</p></details>
+      <details><summary>Should I use 32-bit or 64-bit?</summary><p>Always 64-bit unless the CPU is ancient. 32-bit caps usable RAM at ~4 GB and modern apps are dropping it.</p></details>
+      <details><summary>Is bypassing Windows 11 requirements safe?</summary><p>It works today, but it's unsupported. Keep backups and be prepared to reinstall if a future update refuses the hardware.</p></details>
+    </div>
+  </section>
+
+  <!-- ============ LINUX ============ -->
+  <section class="page" id="page-linux" data-page="linux">
+    <header class="page-head">
+      <h1>Linux <span class="grad-text">Database</span></h1>
+      <p>Learn what Linux is, how it works, and which of the 10 covered distributions fits you.</p>
+    </header>
+
+    <div class="learn-grid">
+      <div class="learn-card glass"><h3>What is Linux?</h3><p>Linux is a free, open-source operating system kernel created by Linus Torvalds in 1991. Combined with GNU tools and other software, it forms complete operating systems called <strong>distributions</strong>. It powers most servers, all of Android, and every top-500 supercomputer — and it's a fantastic desktop OS.</p></div>
+      <div class="learn-card glass"><h3>Distributions</h3><p>A <strong>distro</strong> bundles the kernel with a package manager, desktop environment, and default apps. Families matter: <em>Debian-based</em> (Ubuntu, Mint) prioritize stability; <em>Fedora/RHEL</em> ship cutting-edge tech; <em>Arch-based</em> give you rolling releases and total control.</p></div>
+      <div class="learn-card glass"><h3>Desktop Environments</h3><p>The DE is your GUI — swappable on any distro. <strong>GNOME</strong>: modern, minimal, macOS-like flow. <strong>KDE Plasma</strong>: powerful, Windows-like, endlessly configurable. <strong>XFCE / LXQt</strong>: lightweight for old hardware. <strong>Cinnamon</strong>: traditional and friendly (Mint's default).</p></div>
+      <div class="learn-card glass"><h3>Package Managers</h3><p>Install software from trusted repositories with one command: <code>apt</code> (Debian/Ubuntu/Mint), <code>dnf</code> (Fedora), <code>pacman</code> (Arch), <code>zypper</code> (openSUSE). Universal formats — <strong>Flatpak</strong>, <strong>Snap</strong>, <strong>AppImage</strong> — work across all distros.</p></div>
+      <div class="learn-card glass"><h3>Terminal Basics</h3><p>You don't <em>need</em> the terminal on beginner distros, but it's a superpower. Essentials: <code>ls</code> (list), <code>cd</code> (navigate), <code>cp</code>/<code>mv</code>/<code>rm</code> (copy/move/delete), <code>sudo</code> (run as admin), <code>man cmd</code> (manual). Package example: <code>sudo apt install firefox</code>.</p></div>
+      <div class="learn-card glass"><h3>Customization</h3><p>Linux customization is unmatched: themes (GTK/Qt), icon packs, dock/panel layouts, tiling window managers, custom kernels. Communities like r/unixporn showcase what's possible — from minimal tiling setups to full macOS-style desktops.</p></div>
+    </div>
+
+    <div class="sub-nav glass" role="tablist" aria-label="Difficulty filter">
+      <button class="sub-tab active" data-filter="all">All</button>
+      <button class="sub-tab" data-filter="beginner">Beginner</button>
+      <button class="sub-tab" data-filter="intermediate">Intermediate</button>
+      <button class="sub-tab" data-filter="advanced">Advanced</button>
+    </div>
+
+    <div class="distro-grid" id="distroGrid"><!-- Distro cards injected by script.js --></div>
+
+    <div class="faq glass">
+      <h3>Linux FAQ</h3>
+      <details><summary>Will my games run on Linux?</summary><p>Most Steam games run via Proton (check protondb.com). The big exceptions are competitive titles with kernel anti-cheat (Valorant, some EA/Riot games).</p></details>
+      <details><summary>Can I try Linux without installing?</summary><p>Yes — every distro's USB installer boots into a full "live" desktop. Test hardware, Wi-Fi, and feel before touching your disk.</p></details>
+      <details><summary>Can I dual-boot with Windows?</summary><p>Yes. Install Windows first, shrink its partition, then install Linux into the free space. The GRUB menu will let you pick at boot.</p></details>
+    </div>
+  </section>
+
+  <!-- Distro detail modal -->
+  <div class="modal-overlay" id="distroModal" hidden>
+    <div class="modal glass" role="dialog" aria-modal="true">
+      <button class="icon-btn modal-close" id="modalClose" aria-label="Close">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- ============ HACKINTOSH ============ -->
+  <section class="page" id="page-hackintosh" data-page="hackintosh">
+    <header class="page-head">
+      <h1>Hackintosh <span class="grad-text">Guide</span></h1>
+      <p>Run macOS on standard PC hardware using the OpenCore bootloader.</p>
+    </header>
+
+    <div class="callout callout-warn glass-solid">⚠️ <strong>Warning:</strong> Hackintosh requires compatible hardware and technical knowledge. It violates Apple's macOS EULA, receives no official support, and updates can break your system. Proceed for education and experimentation — never on a mission-critical machine.</div>
+
+    <div class="guide glass">
+      <h3>What is a Hackintosh?</h3>
+      <p>A Hackintosh is a non-Apple computer running macOS. Since macOS is built for a narrow set of Apple hardware, running it elsewhere requires a custom bootloader — <strong>OpenCore</strong> — that makes your PC look enough like a Mac for macOS to boot, plus kernel extensions ("kexts") that act as drivers.</p>
+      <h3>How it works</h3>
+      <p>OpenCore sits between your UEFI firmware and macOS. It injects device properties, patches the kernel on the fly, loads kexts (like <code>VirtualSMC</code>, which emulates Apple's SMC chip), and presents an SMBIOS identity of a real Mac model. macOS then boots believing it's on supported hardware.</p>
+      <h3>Hardware compatibility</h3>
+      <ul>
+        <li><strong>CPU:</strong> Intel (Ivy Bridge → Comet Lake) is the sweet spot. AMD Ryzen works with kernel patches but breaks some apps (Adobe, virtualization).</li>
+        <li><strong>GPU:</strong> AMD (Polaris/Vega/Navi, e.g. RX 580, RX 6600) — native support. <strong>NVIDIA cards newer than ~2015 do not work</strong> on modern macOS.</li>
+        <li><strong>Wi-Fi/BT:</strong> Broadcom chips work natively; Intel Wi-Fi works via <code>itlwm</code>/AirportItlwm.</li>
+        <li><strong>Storage:</strong> Most NVMe/SATA drives work; avoid Samsung PM981 and Intel 600p.</li>
+      </ul>
+      <h3>Limitations</h3>
+      <ul>
+        <li>Apple Silicon (M-series) features and newest macOS versions are increasingly Intel-hostile — macOS Tahoe is the last Intel release.</li>
+        <li>iServices (iMessage/FaceTime) require careful SMBIOS setup and can risk Apple ID flags.</li>
+        <li>Updates can break boot until you update OpenCore/kexts.</li>
+      </ul>
+    </div>
+
+    <div class="guide glass">
+      <h3>Recommended path: OpenCore Simplify</h3>
+      <p>For newcomers, <a href="https://github.com/lzhoang2801/OpCore-Simplify" target="_blank" rel="noopener"><strong>OpCore-Simplify</strong></a> automates EFI creation: it scans your hardware report, picks compatible kexts, and generates a tailored OpenCore EFI. Pair it with the <a href="https://dortania.github.io/OpenCore-Install-Guide/" target="_blank" rel="noopener">Dortania OpenCore Install Guide</a> — the canonical manual reference — to understand what it generated.</p>
+      <h3>Step-by-step overview</h3>
+      <ol class="steps">
+        <li><strong>Check hardware:</strong> Run a hardware report (e.g. Hardware Sniffer on Windows). Confirm CPU generation, GPU model, and Wi-Fi chip against the compatibility lists above.</li>
+        <li><strong>BIOS settings:</strong> Disable Secure Boot, Fast Boot, and CSM. Enable AHCI, Above 4G Decoding, and XHCI Handoff. Set DVMT pre-alloc to 64MB+ for iGPU builds.</li>
+        <li><strong>Create the installer:</strong> Download macOS (via <code>macrecovery.py</code> or a real Mac), flash a 16 GB+ USB. On Windows, OpCore-Simplify + a recovery image is easiest.</li>
+        <li><strong>Build the EFI folder:</strong> The USB's EFI partition holds <code>EFI/BOOT</code> and <code>EFI/OC</code> — OpenCore's core files, your <code>config.plist</code>, ACPI patches (SSDTs), drivers, and kexts.</li>
+        <li><strong>Configure OpenCore:</strong> Edit <code>config.plist</code> with ProperTree. Apply your platform's quirks from the Dortania guide, generate SMBIOS serials with GenSMBIOS (use iMac/MacPro models matching your hardware).</li>
+        <li><strong>Essential kexts (drivers):</strong> <code>Lilu</code> (patching framework), <code>VirtualSMC</code> (SMC emulation), <code>WhateverGreen</code> (graphics), <code>AppleALC</code> (audio), plus your Ethernet kext (e.g. <code>IntelMausi</code>, <code>RealtekRTL8111</code>).</li>
+        <li><strong>Install:</strong> Boot the USB, open Disk Utility, format the target drive as APFS (GUID map), and run the installer — it reboots several times; keep choosing the "macOS Installer" entry.</li>
+        <li><strong>Post-install:</strong> Copy the EFI folder from USB to the internal drive's EFI partition (so it boots without USB), map USB ports with USBToolBox, enable iServices carefully, and take a backup snapshot of your working EFI.</li>
+      </ol>
+      <h3>Troubleshooting</h3>
+      <ul>
+        <li><strong>Stuck at boot?</strong> Boot verbose (<code>-v</code> boot-arg) and search the last lines on Dortania's troubleshooting page.</li>
+        <li><strong>No graphics acceleration?</strong> Check WhateverGreen + correct <code>AAPL,ig-platform-id</code> for iGPUs; confirm the GPU is natively supported.</li>
+        <li><strong>USB issues?</strong> Map ports with USBToolBox — the 15-port limit is real.</li>
+        <li><strong>Update broke boot?</strong> Boot from your backup USB EFI, update OpenCore + kexts, retry.</li>
+      </ul>
+    </div>
+
+    <div class="faq glass">
+      <h3>Hackintosh FAQ</h3>
+      <details><summary>Is Hackintosh legal?</summary><p>It violates Apple's EULA, which requires macOS to run on Apple hardware. Enforcement against individuals is essentially unheard of, but businesses should never rely on it.</p></details>
+      <details><summary>Is Hackintosh dying?</summary><p>Slowly, yes. Apple has moved to its own silicon; macOS Tahoe is the final Intel version, with security updates for a few more years. Existing builds will keep working on supported versions.</p></details>
+      <details><summary>Can I dual-boot macOS and Windows?</summary><p>Yes — best practice is separate drives, with OpenCore chain-loading the Windows boot manager.</p></details>
+    </div>
+  </section>
+
+  <!-- ============ COMPARE ============ -->
+  <section class="page" id="page-compare" data-page="compare">
+    <header class="page-head">
+      <h1>Compare <span class="grad-text">Systems</span></h1>
+      <p>Interactive, honest comparisons across the categories that actually matter.</p>
+    </header>
+
+    <div class="sub-nav glass" role="tablist" aria-label="Comparison type">
+      <button class="sub-tab active" data-ctab="os">OS vs OS</button>
+      <button class="sub-tab" data-ctab="windows">Windows Versions</button>
+      <button class="sub-tab" data-ctab="distros">Linux Distros</button>
+    </div>
+
+    <div class="ctab-panel active" id="ctab-os">
+      <div class="table-wrap glass"><table class="cmp-table" id="cmpOsTable"><!-- injected --></table></div>
+      <p class="table-hint">💡 Click a column header to highlight it. Ratings are out of 5.</p>
+    </div>
+    <div class="ctab-panel" id="ctab-windows">
+      <div class="table-wrap glass"><table class="cmp-table" id="cmpWinTable"><!-- injected --></table></div>
+    </div>
+    <div class="ctab-panel" id="ctab-distros">
+      <div class="table-wrap glass"><table class="cmp-table" id="cmpDistroTable"><!-- injected --></table></div>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="page" id="page-quiz" data-page="quiz">
+    <header class="page-head">
+      <h1>What OS belongs <span class="grad-text">on your machine?</span></h1>
+      <p>Seven quick questions. One honest recommendation.</p>
+    </header>
+
+    <div class="quiz-app glass" id="quizApp">
+      <div class="quiz-progress"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
+      <div class="quiz-stage" id="quizStage">
+        <div class="quiz-intro" id="quizIntro">
+          <div class="quiz-icon">🧭</div>
+          <h2>Find your match</h2>
+          <p>We'll ask about your experience, gaming needs, privacy priorities, hardware, and patience for troubleshooting — then recommend the OS that genuinely fits.</p>
+          <button class="btn btn-primary" id="quizStart">Start the Quiz</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="page" id="page-about" data-page="about">
+    <header class="page-head">
+      <h1>About <span class="grad-text">KernelHub</span></h1>
+      <p>A beautiful operating system encyclopedia where anyone can find their perfect OS.</p>
+    </header>
+    <div class="guide glass">
+      <h3>Why KernelHub exists</h3>
+      <p>Choosing an operating system shouldn't require reading twelve forum threads from 2014. KernelHub combines the technical depth of the Arch Wiki, the structure of Microsoft Learn, and a clean, modern interface — so beginners and power users alike can explore, compare, and install with confidence.</p>
+      <h3>Principles</h3>
+      <ul>
+        <li><strong>Honest:</strong> every OS gets real pros <em>and</em> cons. No fanboyism.</li>
+        <li><strong>Fast:</strong> pure HTML, CSS, and JavaScript. No frameworks, no trackers.</li>
+        <li><strong>Accessible:</strong> keyboard navigable, semantic markup, respects reduced-motion.</li>
+        <li><strong>Expandable:</strong> clean data-driven architecture — adding a distro is a few lines of JS.</li>
+      </ul>
+      <h3>Built with</h3>
+      <p>HTML5 · CSS3 (custom Liquid Glass design system) · Vanilla JavaScript · localStorage for bookmarks &amp; theme.</p>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer glass">
+    <div class="footer-inner">
+      <div>
+        <span class="brand-mark">K</span> <strong>KernelHub</strong>
+        <p>Explore. Compare. Install.</p>
+      </div>
+      <nav aria-label="Footer">
+        <a href="#windows" data-route="windows">Windows</a>
+        <a href="#linux" data-route="linux">Linux</a>
+        <a href="#hackintosh" data-route="hackintosh">Hackintosh</a>
+        <a href="#compare" data-route="compare">Compare</a>
+        <a href="#quiz" data-route="quiz">Quiz</a>
+      </nav>
+      <p class="footer-note">Educational content. All trademarks belong to their respective owners.<br>© 2026 KernelHub.</p>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button class="back-top glass" id="backTop" aria-label="Back to top" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
